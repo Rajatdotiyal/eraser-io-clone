@@ -32,6 +32,8 @@ function FileList() {
     fileList_ && setFileList(fileList_);
   }, [fileList_]);
 
+  
+
   return (
     <div className="mt-10">
       <div className="overflow-x-auto">
@@ -54,7 +56,14 @@ function FileList() {
           </thead>
 
           <tbody className="divide-y divide-gray-200">
-            {fileList &&
+            {fileList.length=== 0 ? (
+               <tr>
+               <td colSpan={5} className="text-center py-10">
+                 <span className="text-gray-500">Create a new file</span>
+                 
+               </td>
+             </tr>
+            ):(
               fileList.map((file, index) => (
                 <tr onClick={()=>router.push(`/workspace/${file._id}`)}  key={index} className="cursor-pointer odd:bg-gray-50">
                   <td className="  whitespace-nowrap px-4 py-2 font-medium text-gray-900">
@@ -86,7 +95,7 @@ function FileList() {
                     </DropdownMenu>
                   </td>
                 </tr>
-              ))}
+              )))}
           </tbody>
         </table>
       </div>
