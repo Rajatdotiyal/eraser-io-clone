@@ -105,7 +105,7 @@ function SideNavTopSection({ user,setActiveTeamInfo }: any ) {
             </h2>
           ))}
 
-          <LogoutLink>
+          <LogoutLink postLogoutRedirectURL={"/"} >
             <h2 className="flex gap-2 items-center p-2 hover:bg-gray-100 rounded-lg text-sm cursor-pointer">
               <LogOut className="h-4 w-4" />
               Logout{" "}
