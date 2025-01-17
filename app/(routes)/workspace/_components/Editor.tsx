@@ -17,40 +17,34 @@ const rawDocument = {
   blocks: [
     {
       data: {
-        text: "Document Name", 
+        text: "", // Placeholder for heading
         level: 2,
       },
       id: "123",
-      type: "header",
-    },
-    {
-      data: {
-        text: "Subheading", 
-        level: 4,
-      },
-      id: "1234",
       type: "header",
     },
   ],
   version: "2.8.1",
 };
 
-export interface EditorProps{
-  onSaveTrigger : boolean,
-  fileData? : FILE
+export interface EditorProps {
+  onSaveTrigger: boolean;
+  fileData?: FILE;
 }
 
-function Editor({onSaveTrigger,fileData} : EditorProps) {
+function Editor({ onSaveTrigger, fileData }: EditorProps) {
   const ref = useRef<EditorJS>(null);
   const updateDocument = useMutation(api.files.updateDocument);
+
   useEffect(() => {
-    fileData&&initEditor();
+    fileData && initEditor();
   }, [fileData]);
 
-const params = useParams();
-  useEffect(()=>{
-    onSaveTrigger && onSaveDocument()
-  },[onSaveTrigger])
+  const params = useParams();
+
+  useEffect(() => {
+    onSaveTrigger && onSaveDocument();
+  }, [onSaveTrigger]);
 
   const initEditor = () => {
     const editor = new EditorJS({
@@ -60,9 +54,9 @@ const params = useParams();
           class: Header as unknown as EditorJS.ToolConstructable,
           shortcut: "CMD+SHIFT+H",
           config: {
-            placeholder: "Enter Heading",
-            levels: [1, 2, 3],
-            defaultLevel: 1,
+            placeholder: "Enter Title.....", // Default placeholder
+            levels: [1, 2, 3, 4],
+            defaultLevel: 2,
           },
         },
         list: {
@@ -77,28 +71,28 @@ const params = useParams();
           inlineToolbar: true,
         },
       },
-      data :  fileData?.document ? JSON.parse(fileData.document) : rawDocument
+      data: fileData?.document ? JSON.parse(fileData.document) : rawDocument,
     });
     ref.current = editor;
   };
 
-  const onSaveDocument =() =>{
-    if(ref.current){
-      ref.current.save().then((outputData) => {
-        
-       
-        updateDocument({
-          _id: params.fileId as Id<"files"> ,
-          document : JSON.stringify(outputData)
-        }).then((res)=>{
-            toast.success("Document saved ")
-          
+  const onSaveDocument = () => {
+    if (ref.current) {
+      ref.current
+        .save()
+        .then((outputData) => {
+          updateDocument({
+            _id: params.fileId as Id<"files">,
+            document: JSON.stringify(outputData),
+          }).then(() => {
+            toast.success("Document saved");
+          });
         })
-      }).catch(() => {
-        toast.error("Server Error")
-      });
+        .catch(() => {
+          toast.error("Server Error");
+        });
     }
-  }
+  };
 
   return (
     <div>
@@ -106,5 +100,6 @@ const params = useParams();
     </div>
   );
 }
+
 
 export default Editor;
